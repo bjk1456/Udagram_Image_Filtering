@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
+const urlExists = require('url-exists');
 
 (async () => {
 
@@ -12,6 +13,35 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
+
+  app.get( "/filteredimage", async ( req, res ) => {
+    console.log("Inside GET /filteredimage");
+    urlExists(req.query.image_url, function(err, exists) {
+      console.log(exists); // true
+      console.log(err);
+      if((!exists) || (err)){
+        res.status(404).send({message : 'Failed to obtain an image from the' + req.query.image_url + 'image_url'})
+      }
+    });
+    filterImageFromURL(req.query.image_url).then(path => {
+      console.log(path);
+      res.sendFile(path, function (err, data){
+        if(err) return console.error(err);
+        let files: string[] = [path];
+        deleteLocalFiles(files);
+
+      });
+      console.log("Inside the big one the path is " + path);
+      //let files: string[] = [path];
+      //deleteLocalFiles(files);
+    }).catch(err => res.status(404).send({message : 'Failed to crop the image from the' + req.query.image_url + 'image_url'}));
+
+    console.log("Sup dawg?");
+    //let files: string[] = ["/Users/benjaminkelly/Udacity/CloudDeveloperNANO/Udagram_Image_Filtering/src/util/tmp/filtered.928.jpg"]
+    //deleteLocalFiles(files);
+    //res.send("destToFile: ");
+
+  });
 
   // @TODO1 IMPLEMENT A RESTFUL ENDPOINT
   // GET /filteredimage?image_url={{URL}}
