@@ -1,6 +1,6 @@
 # Udagram Image Filtering Microservice
 
-Udagram is a simple cloud application that allows users to post photos, and process photos using an image filtering microservice.
+Udagram is a simple cloud application that allows users to post photos, and process them using an image filtering microservice.
 
 1. [The Image Filtering Microservice](https://github.com/bjk1456/Udagram_Image_Filtering), It is a Node-Express application which runs a simple script to process images.
 
