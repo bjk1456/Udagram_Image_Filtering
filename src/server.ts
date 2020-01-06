@@ -15,13 +15,13 @@ const urlExists = require('url-exists');
   app.use(bodyParser.json());
 
   app.get( "/filteredimage", async ( req, res ) => {
-    urlExists(req.query.image_url, function(err, exists) {
+    urlExists(req.query.image_url, function(err: any, exists:any) {
       if((!exists) || (err)){
         res.status(404).send({message : 'Failed to obtain an image from the' + req.query.image_url + 'image_url'})
       }
     });
     filterImageFromURL(req.query.image_url).then(path => {
-      res.sendFile(path, function (err, data){
+      res.sendFile(path, function (err: any, data: any){
         if(err)  res.status(404).send({message : 'Failed to send cropped image from the' + req.query.image_url + 'image_url because: ' + err.message});
         deleteLocalFiles([path]);
       });
